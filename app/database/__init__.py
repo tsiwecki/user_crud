@@ -7,7 +7,7 @@ DATABASE = "user.db"
 
 def get_db():
     db = getattr(g, "_database", None)
-    if no db:
+    if not db:
         db = g._database = sqlite3.connect(DATABASE)
     return db
 
@@ -50,8 +50,14 @@ def insert(first_name, last_name, hobbies=None, active=None):
 
 def deactivate_user(user_id):
     cursor = get_db()
-    sursor.execute("UPDATE user SET active=0 WHERE id=?", (user_id, ))
+    cursor.execute("UPDATE user SET active=0 WHERE id=?", (user_id, ))
     cursor.commit()
     cursor.close()
 
-    
+
+def select_user(user_id):
+    cursor = get_db().execute("SELECT * FROM user WHERE id=?", (user_id, ))  
+    results = cursor.fetchall()
+    cursor.close()
+    return output_formatter(results) 
+
