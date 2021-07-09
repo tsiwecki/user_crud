@@ -11,10 +11,18 @@ from app.database import User
 def get_index():
     return render_template("index.html")
 
-app.route("/users/<int:uid>")
+@app.route("/users/<int:uid>")
 def get_user(uid):
     user = User.query.filter_by(id=uid).first()
     return render_template("user_detail.html", user=user)
+
+@app.route("/users/<int:uid>")
+def delete_user(uid):
+    query = "DELETE FROM db WHERE id=?"
+    cursor = get_user(uid)
+    cursor.execute(query, (uid, ))
+    cursor.commit()
+    return True
 
 @app.errorhandler(404)
 def page_not_found(e):
